@@ -1,3 +1,5 @@
+import java.util.Properties // Import necesario para leer el archivo local.properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -18,6 +20,29 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // =========================================================================
+        // INICIO DE MODIFICACIONES: Configuración para ocultar API Key de Google Maps
+        // =========================================================================
+
+        // 1. Instanciamos un objeto Properties
+        val properties = Properties()
+
+        // 2. Apuntamos al archivo local.properties que está en la raíz del proyecto
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        // 3. Verificamos si el archivo existe y lo cargamos en memoria
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+
+        // 4. Creamos una variable dinámica (Placeholder) para el AndroidManifest.xml.
+        // Buscará 'MAPS_API_KEY' en el local.properties. Si no lo encuentra, asignará un string vacío.
+        manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        // =========================================================================
+        // FIN DE MODIFICACIONES
+        // =========================================================================
     }
 
     buildTypes {
