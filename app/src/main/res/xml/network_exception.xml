@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-segurity-config>
+    <domain-config ClearTextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.232.12.134:5001</domain>
+    </domain-config>
+</network-segurity-config>
