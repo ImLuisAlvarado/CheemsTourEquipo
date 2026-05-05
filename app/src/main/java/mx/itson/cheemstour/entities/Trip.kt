@@ -1,11 +1,13 @@
 package mx.itson.cheemstour.entities
 
 class Trip {
-    val id: Int
-    val name: String
-    val city: String
-    val latitude: Double
-    val longitude: Double
+    var id: Int = 0
+    var name: String = ""
+    var city: String = ""
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+
+    constructor()
 
     constructor(id: Int, name: String, city: String, latitude: Double, longitude: Double) {
         this.id = id

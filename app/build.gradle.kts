@@ -14,16 +14,13 @@ android {
 
     defaultConfig {
         applicationId = "mx.itson.cheemstour"
-        minSdk = 30
+        minSdk = 28
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // =========================================================================
-        // INICIO DE MODIFICACIONES: Configuración para ocultar API Key de Google Maps
-        // =========================================================================
 
         // 1. Instanciamos un objeto Properties
         val properties = Properties()
@@ -40,9 +37,7 @@ android {
         // Buscará 'MAPS_API_KEY' en el local.properties. Si no lo encuentra, asignará un string vacío.
         manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
 
-        // =========================================================================
-        // FIN DE MODIFICACIONES
-        // =========================================================================
+
     }
 
     buildTypes {

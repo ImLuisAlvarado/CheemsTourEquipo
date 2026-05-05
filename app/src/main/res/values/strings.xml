@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">CheemsTour</string>
     <string name="view_map">View Trip Map</string>
+    <string name="save_trip">Save Trip</string>
+    <string name="name_new_trip">Name New Trip:</string>
+    <string name="form_trip_name_editex">Write the name of your trip</string>
+    <string name="view_form_trips">View the travel form</string>
+    <string name="selected_trip">selected trip</string>
+    <string name="text_city">City: %1$s</string>
+    <string name="unknown_city">unknown city</string>
+    <string name="not_city">The city could not be obtained</string>
+    <string name="save_trip_toast">Trip saved!</string>
+    <string name="error_save_db">Error saving to database</string>
+    <string name="Failed_server">The server failed</string>
+    <string name="err_connection">Connection error</string>
+    <string name="enter_name_select_point">Please enter a name and select a point on the map</string>
 </resources>
