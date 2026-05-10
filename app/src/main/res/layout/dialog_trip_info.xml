@@ -54,6 +54,23 @@
         android:layout_marginBottom="8dp"/>
 
     <TextView
+        android:id="@+id/dialog_weather_temp_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#444444"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/dialog_weather_feel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#444444"
+        android:layout_marginBottom="8dp"/>
+
+
+    <TextView
         android:id="@+id/dialog_weather_humidity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,6 +80,14 @@
 
     <TextView
         android:id="@+id/dialog_weather_sunrise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#444444"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/dialog_weather_sunset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"

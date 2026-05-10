@@ -77,11 +77,17 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     fun getWeather(trip: Trip) {
+        val lang = when (Locale.getDefault().language) {
+            "es" -> "es"
+            else -> "en"
+        }
+
         val call: Call<Weather> = RetrofitUtil.getApiWeather().getWeather(
             lat   = trip.latitude,
             lon   = trip.longitude,
-            appid = "6c79d81c72b4a32706697c4485a9a8a1",
-            units = "metric"
+            appid = BuildConfig.OPENWEATHER_API_KEY,
+            units = "metric",
+            lang  = lang
         )
         call.enqueue(object : Callback<Weather> {
             override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
@@ -100,9 +106,13 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
     fun showTripInfo(trip: Trip, weather: Weather){
         val temperature = weather.temperature.temperature.toInt()
         val temperatureMin = weather.temperature.temperatureMin.toInt()
+        val temperatureMax = weather.temperature.temperatureMax.toInt()
         val description = weather.description.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "--"
-        val date = Date(weather.sunrise.sunrise * 1000L)
+        val dateSunrise = Date(weather.sun.sunrise * 1000L)
+        val dateSunset = Date(weather.sun.sunset * 1000L)
         val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val feel = weather.temperature.feel.toInt()
+
 
         val view = layoutInflater.inflate(R.layout.dialog_trip_info, null)
 
@@ -110,9 +120,13 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         view.findViewById<TextView>(R.id.dialog_trip_city).text = "Ciudad: ${trip.city}"
         view.findViewById<TextView>(R.id.dialog_weather_temp).text = "$temperature°C"
         view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "Temperatura minima: $temperatureMin°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "Temperatura maxima: $temperatureMax°C"
+        view.findViewById<TextView>(R.id.dialog_weather_feel).text = "Sensación térmica: $feel°C"
         view.findViewById<TextView>(R.id.dialog_weather_desc).text = description
         view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: ${weather.temperature.humidity}%"
-        view.findViewById<TextView>(R.id.dialog_weather_sunrise).text = "${dateFormat.format(date)}"
+        view.findViewById<TextView>(R.id.dialog_weather_sunrise).text = "Salida del sol: ${dateFormat.format(dateSunrise)}"
+        view.findViewById<TextView>(R.id.dialog_weather_sunset).text = "Puesta del sol: ${dateFormat.format(dateSunset)}"
+
 
         view.findViewById<LinearLayout>(R.id.main).setBackgroundColor(
             when {

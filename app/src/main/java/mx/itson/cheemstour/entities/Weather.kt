@@ -14,7 +14,7 @@ class Weather {
     var description: List<WeatherDescription> = emptyList()
 
     @SerializedName("sys")
-    var sunrise: WeatherSunrise = WeatherSunrise()
+    var sun: WeatherSun = WeatherSun()
 
 
 }
