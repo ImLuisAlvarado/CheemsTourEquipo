@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CheemsTour</string>
+    <string name="view_map">Ver mapa de viaje</string>
+    <string name="save_trip">Guardar ubicación</string>
+    <string name="name_new_trip">Nombre de nueva ubicación:</string>
+    <string name="form_trip_name_editex">Escribe el nombre de la ubicación</string>
+    <string name="view_form_trips">Ver el formulario de viaje</string>
+    <string name="selected_trip">Locación seleccionada</string>
+    <string name="text_city">Ciudad: %1$s</string>
+    <string name="unknown_city">Ciudad desconocida</string>
+    <string name="not_city">No se pudo obtener la ciudad</string>
+    <string name="save_trip_toast">¡Ubicación guardada!</string>
+    <string name="error_save_db">Error guardando en la base de datos</string>
+    <string name="Failed_server">¡El servidor falló!</string>
+    <string name="err_connection">Error de conexión</string>
+    <string name="enter_name_select_point">Por favor ingresa un nombre y selecciona un punto en el mapa</string>
+    <string name="err_click">Ocurrió un error al procesar el click del botón</string>
+    <string name="err_loading_map">Se ha producido un error al cargar el mapa</string>
+</resources>

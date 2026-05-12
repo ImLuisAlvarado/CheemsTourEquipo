@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CheemsTour</string>
+    <string name="view_map">Reisekarte anzeigen</string>
+    <string name="save_trip">Reise speichern</string>
+    <string name="name_new_trip">Neue Reise benennen</string>
+    <string name="form_trip_name_editex">Gib den Namen deiner Reise ein</string>
+    <string name="view_form_trips">Reiseformular anzeigen</string>
+    <string name="selected_trip">Ausgewählte Reise</string>
+    <string name="text_city">Stadt: %1$s</string>
+    <string name="unknown_city">unbekannte Stadt</string>
+    <string name="not_city">Die Stadt konnte nicht ermittelt werden</string>
+    <string name="save_trip_toast">Reise gespeichert!</string>
+    <string name="error_save_db">Fehler beim Speichern in der Datenbank</string>
+    <string name="Failed_server">El servidor ha dejado de funcionar</string>
+    <string name="err_connection">Error de conexión</string>
+    <string name="enter_name_select_point">Bitte gib einen Namen ein und wähle einen Punkt auf der Karte aus</string>
+    <string name="err_click">Bei der Verarbeitung des Klickereignisses ist ein Fehler aufgetreten</string>
+    <string name="err_loading_map">" Beim Laden der Karte ist ein Fehler aufgetreten"</string>
+</resources>

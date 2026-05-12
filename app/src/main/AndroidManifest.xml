@@ -35,4 +35,6 @@
             android:value="${MAPS_API_KEY}" />
     </application>
 
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 </manifest>
