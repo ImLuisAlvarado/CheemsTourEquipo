@@ -1,0 +1,18 @@
+[33mcommit faf84483500a3a87d8e606845715e369e39a8c96[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mopenweather[m[33m)[m
+Author: EvelynGuzman-05 <evelin21guzace@gmail.com>
+Date:   Sat May 9 22:23:23 2026 -0700
+
+    Actualización del dialog que muestra la información de un trip
+
+ .idea/deploymentTargetSelector.xml                 |  4 [32m++[m[31m--[m
+ app/build.gradle.kts                               | 13 [32m+++++++++++[m
+ .../java/mx/itson/cheemstour/TripMapActivity.kt    | 22 [32m+++++++++++++++[m[31m----[m
+ .../java/mx/itson/cheemstour/entities/Weather.kt   |  2 [32m+[m[31m-[m
+ .../entities/{WeatherSunrise.kt => WeatherSun.kt}  |  5 [32m++++[m[31m-[m
+ .../cheemstour/entities/WeatherTemperature.kt      |  7 [32m++++++[m
+ .../itson/cheemstour/interfaces/OpenWeatherAPI.kt  |  2 [32m+[m[31m-[m
+ .../java/mx/itson/cheemstour/utils/RetrofitUtil.kt |  2 [32m+[m[31m-[m
+ app/src/main/res/layout/dialog_trip_info.xml       | 25 [32m++++++++++++++++++++++[m
+ app/src/main/res/xml/network_exception.xml         |  2 [32m+[m[31m-[m
+ gradle/libs.versions.toml                          |  2 [32m+[m[31m-[m
+ 11 files changed, 74 insertions(+), 12 deletions(-)
