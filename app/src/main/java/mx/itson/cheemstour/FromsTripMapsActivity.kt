@@ -69,7 +69,7 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
                     nuevoViaje.latitude = latitudSeleccionada
                     nuevoViaje.longitude = longitudSeleccionada
 
-                    val call: Call<ApiResponse> = RetrofitUtil.getApi().saveTrip(nuevoViaje)
+                    val call: Call<ApiResponse> = RetrofitUtil.getApiCheems().saveTrip(nuevoViaje)
                     call.enqueue(object : retrofit2.Callback<ApiResponse> {
 
                         override fun onResponse(call: Call<ApiResponse>, response: retrofit2.Response<ApiResponse>) {

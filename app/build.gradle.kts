@@ -6,6 +6,11 @@ plugins {
 
 android {
     namespace = "mx.itson.cheemstour"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -36,6 +41,14 @@ android {
         // 4. Creamos una variable dinámica (Placeholder) para el AndroidManifest.xml.
         // Buscará 'MAPS_API_KEY' en el local.properties. Si no lo encuentra, asignará un string vacío.
         manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        buildConfigField(
+            "String",
+            "OPENWEATHER_API_KEY",
+            "\"${properties.getProperty("OPENWEATHER_API_KEY") ?: ""}\""
+        )
+
+
 
 
     }
