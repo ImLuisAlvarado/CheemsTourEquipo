@@ -14,4 +14,6 @@
     <string name="Failed_server">The server failed</string>
     <string name="err_connection">Connection error</string>
     <string name="enter_name_select_point">Please enter a name and select a point on the map</string>
+    <string name="err_click">An error occurred while processing the button click</string>
+    <string name="err_loading_map">An error ocurred while loading the map</string>
 </resources>
