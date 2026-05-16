@@ -7,4 +7,7 @@ class WeatherDescription {
     @SerializedName("description")
     var description: String = ""
 
+    @SerializedName("icon")
+    var icon: String? = null
+
 }

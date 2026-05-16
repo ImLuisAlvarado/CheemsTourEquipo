@@ -29,6 +29,14 @@
         android:background="#EEEEEE"
         android:layout_marginBottom="16dp"/>
 
+    <ImageView
+        android:id="@+id/dialog_weather_icon"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="8dp"/>
+
     <TextView
         android:id="@+id/dialog_weather_temp"
         android:layout_width="wrap_content"
@@ -69,7 +77,6 @@
         android:textColor="#444444"
         android:layout_marginBottom="8dp"/>
 
-
     <TextView
         android:id="@+id/dialog_weather_humidity"
         android:layout_width="wrap_content"
@@ -92,12 +99,5 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="#444444"/>
-
-
-
-
-
-
-
 
 </LinearLayout>
