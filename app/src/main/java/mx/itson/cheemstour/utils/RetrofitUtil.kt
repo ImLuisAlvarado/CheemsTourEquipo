@@ -25,6 +25,4 @@ object RetrofitUtil {
 
         return retrofit.create(OpenWeatherAPI::class.java)
     }
-
-
 }
