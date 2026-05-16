@@ -15,6 +15,4 @@ class Weather {
 
     @SerializedName("sys")
     var sun: WeatherSun = WeatherSun()
-
-
 }
