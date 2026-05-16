@@ -2,6 +2,7 @@ package mx.itson.cheemstour
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -44,6 +45,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
     }
+
     fun getTrips() {
         val call: Call<List<Trip>> = RetrofitUtil.getApiCheems().getTrips()
         call.enqueue(object : Callback<List<Trip>> {
@@ -91,28 +93,39 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         call.enqueue(object : Callback<Weather> {
             override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
-                val weather: Weather = response.body()!!
-                Log.d("Weather city", weather.city)
-                showTripInfo(trip, weather)
+                // 1. Validamos de forma segura que la respuesta exista (Evita NullPointerException)
+                if (response.isSuccessful && response.body() != null) {
+                    val weather = response.body()!!
+                    Log.d("Weather city", weather.city ?: "Ciudad desconocida")
+                    showTripInfo(trip, weather)
+                } else {
+                    Log.e("API_ERROR", "El servidor no devolvió el clima. Código: ${response.code()}")
+                }
             }
 
             override fun onFailure(call: Call<Weather>, t: Throwable) {
-                Log.e("Error calling API", t.message.toString())
+                Log.e("Error calling API", t.message ?: "Error desconocido de red")
             }
         })
     }
 
 
     fun showTripInfo(trip: Trip, weather: Weather){
-        val temperature = weather.temperature.temperature.toInt()
-        val temperatureMin = weather.temperature.temperatureMin.toInt()
-        val temperatureMax = weather.temperature.temperatureMax.toInt()
-        val description = weather.description.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "--"
-        val dateSunrise = Date(weather.sun.sunrise * 1000L)
-        val dateSunset = Date(weather.sun.sunset * 1000L)
-        val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        val feel = weather.temperature.feel.toInt()
+        // Accesos seguros con valores por defecto por si el JSON falla
+        val temperature = weather.temperature?.temperature?.toInt() ?: 0
+        val temperatureMin = weather.temperature?.temperatureMin?.toInt() ?: 0
+        val temperatureMax = weather.temperature?.temperatureMax?.toInt() ?: 0
+        val description = weather.description?.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "--"
 
+        // Protegemos las fechas
+        val sunRiseUnix = weather.sun?.sunrise ?: 0L
+        val sunSetUnix = weather.sun?.sunset ?: 0L
+        val dateSunrise = Date(sunRiseUnix * 1000L)
+        val dateSunset = Date(sunSetUnix * 1000L)
+        val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        val feel = weather.temperature?.feel?.toInt() ?: 0
+        val humidity = weather.temperature?.humidity ?: 0
 
         val view = layoutInflater.inflate(R.layout.dialog_trip_info, null)
 
@@ -123,10 +136,26 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "Temperatura maxima: $temperatureMax°C"
         view.findViewById<TextView>(R.id.dialog_weather_feel).text = "Sensación térmica: $feel°C"
         view.findViewById<TextView>(R.id.dialog_weather_desc).text = description
-        view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: ${weather.temperature.humidity}%"
+        view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: $humidity%"
         view.findViewById<TextView>(R.id.dialog_weather_sunrise).text = "Salida del sol: ${dateFormat.format(dateSunrise)}"
         view.findViewById<TextView>(R.id.dialog_weather_sunset).text = "Puesta del sol: ${dateFormat.format(dateSunset)}"
 
+        // 1. Enlazamos el ImageView que creaste en el XML
+        val imgWeatherIcon = view.findViewById<ImageView>(R.id.dialog_weather_icon)
+
+        // 2. Extraemos el código del ícono de la lista de OpenWeather
+        val iconCode = weather.description?.firstOrNull()?.icon
+
+        // 3. Verificamos que el código no sea nulo antes de buscar la imagen
+        if (iconCode != null) {
+            // Construimos la URL oficial. El "@4x" hace que se descargue en alta definición
+            val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@4x.png"
+
+            // Usamos Glide para descargar e inyectar la imagen silenciosamente
+            com.bumptech.glide.Glide.with(this)
+                .load(iconUrl)
+                .into(imgWeatherIcon)
+        }
 
         view.findViewById<LinearLayout>(R.id.main).setBackgroundColor(
             when {
@@ -140,7 +169,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
             .setView(view)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             .show()
-
     }
 
 
