@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import mx.itson.cheemstour.entities.Trip
 import mx.itson.cheemstour.entities.Weather
 import mx.itson.cheemstour.utils.RetrofitUtil
+import mx.itson.cheemstour.utils.SunPathView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,7 +33,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
     var map : GoogleMap? = null
     val markerTrip = HashMap<String, Trip>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,7 +44,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         var mapFragment = supportFragmentManager.findFragmentById(R.id.maps) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
     }
 
     fun getTrips() {
@@ -77,7 +77,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
-
     fun getWeather(trip: Trip) {
         val lang = when (Locale.getDefault().language) {
             "es" -> "es"
@@ -93,7 +92,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         call.enqueue(object : Callback<Weather> {
             override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
-                // 1. Validamos de forma segura que la respuesta exista (Evita NullPointerException)
+                // Validación segura
                 if (response.isSuccessful && response.body() != null) {
                     val weather = response.body()!!
                     Log.d("Weather city", weather.city ?: "Ciudad desconocida")
@@ -109,54 +108,69 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
-
     fun showTripInfo(trip: Trip, weather: Weather){
-        // Accesos seguros con valores por defecto por si el JSON falla
         val temperature = weather.temperature?.temperature?.toInt() ?: 0
         val temperatureMin = weather.temperature?.temperatureMin?.toInt() ?: 0
         val temperatureMax = weather.temperature?.temperatureMax?.toInt() ?: 0
         val description = weather.description?.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "--"
 
-        // Protegemos las fechas
-        val sunRiseUnix = weather.sun?.sunrise ?: 0L
-        val sunSetUnix = weather.sun?.sunset ?: 0L
-        val dateSunrise = Date(sunRiseUnix * 1000L)
-        val dateSunset = Date(sunSetUnix * 1000L)
-        val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-
         val feel = weather.temperature?.feel?.toInt() ?: 0
         val humidity = weather.temperature?.humidity ?: 0
+
+        // --- MAGIA DE ZONAS HORARIAS LOCALES ---
+        val sunRiseUnix = weather.sun?.sunrise ?: 0L
+        val sunSetUnix = weather.sun?.sunset ?: 0L
+        val tzShift = weather.timezone // Segundos de diferencia con UTC
+        val currentUnix = System.currentTimeMillis() / 1000L
+
+        // Formateador obligado a UTC para que Android no intente usar la hora de Sonora
+        val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        dateFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
+
+        // Sumamos el shift de la ciudad destino a la hora global
+        val dateSunrise = Date((sunRiseUnix + tzShift) * 1000L)
+        val dateSunset = Date((sunSetUnix + tzShift) * 1000L)
+
+        // Saber si es de día o de noche
+        val isDay = currentUnix in sunRiseUnix..sunSetUnix
 
         val view = layoutInflater.inflate(R.layout.dialog_trip_info, null)
 
         view.findViewById<TextView>(R.id.dialog_trip_name).text = trip.name
         view.findViewById<TextView>(R.id.dialog_trip_city).text = "Ciudad: ${trip.city}"
         view.findViewById<TextView>(R.id.dialog_weather_temp).text = "$temperature°C"
-        view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "Temperatura minima: $temperatureMin°C"
-        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "Temperatura maxima: $temperatureMax°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "Temperatura mínima: $temperatureMin°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "Temperatura máxima: $temperatureMax°C"
         view.findViewById<TextView>(R.id.dialog_weather_feel).text = "Sensación térmica: $feel°C"
         view.findViewById<TextView>(R.id.dialog_weather_desc).text = description
         view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: $humidity%"
-        view.findViewById<TextView>(R.id.dialog_weather_sunrise).text = "Salida del sol: ${dateFormat.format(dateSunrise)}"
-        view.findViewById<TextView>(R.id.dialog_weather_sunset).text = "Puesta del sol: ${dateFormat.format(dateSunset)}"
 
-        // 1. Enlazamos el ImageView que creaste en el XML
-        val imgWeatherIcon = view.findViewById<ImageView>(R.id.dialog_weather_icon)
+        // Textos dinámicos dependiendo de si es de día o de noche
+        val txtAmanecer = view.findViewById<TextView>(R.id.dialog_weather_sunrise)
+        val txtAtardecer = view.findViewById<TextView>(R.id.dialog_weather_sunset)
 
-        // 2. Extraemos el código del ícono de la lista de OpenWeather
-        val iconCode = weather.description?.firstOrNull()?.icon
-
-        // 3. Verificamos que el código no sea nulo antes de buscar la imagen
-        if (iconCode != null) {
-            // Construimos la URL oficial. El "@4x" hace que se descargue en alta definición
-            val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@4x.png"
-
-            // Usamos Glide para descargar e inyectar la imagen silenciosamente
-            com.bumptech.glide.Glide.with(this)
-                .load(iconUrl)
-                .into(imgWeatherIcon)
+        if (isDay) {
+            txtAmanecer.text = "Amanecer: ${dateFormat.format(dateSunrise)}"
+            txtAtardecer.text = "Atardecer: ${dateFormat.format(dateSunset)}"
+        } else {
+            txtAmanecer.text = "Atardecer previo: ${dateFormat.format(dateSunset)}"
+            txtAtardecer.text = "Próximo Amanecer: ${dateFormat.format(dateSunrise)}"
         }
 
+        // Integración de SunPathView con horas absolutas (agnósticas de zona horaria)
+        val sunPathView = view.findViewById<SunPathView>(R.id.dialog_sun_path)
+        sunPathView.setTimes(sunRiseUnix, sunSetUnix, currentUnix)
+
+        // Integración de Glide para el ícono principal
+        val imgWeatherIcon = view.findViewById<ImageView>(R.id.dialog_weather_icon)
+        val iconCode = weather.description?.firstOrNull()?.icon
+
+        if (iconCode != null) {
+            val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@4x.png"
+            com.bumptech.glide.Glide.with(this).load(iconUrl).into(imgWeatherIcon)
+        }
+
+        // Color de fondo
         view.findViewById<LinearLayout>(R.id.main).setBackgroundColor(
             when {
                 temperature <= 15 -> android.graphics.Color.parseColor("#2196F3")
@@ -171,10 +185,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
             .show()
     }
 
-
-
-
-
     override fun onMapReady(googleMap: GoogleMap) {
         try {
             map = googleMap
@@ -186,7 +196,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     getWeather(trip)
                 }
                 true
-
             }
 
             getTrips()
