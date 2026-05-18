@@ -12,15 +12,15 @@ class SunPathView @JvmOverloads constructor(
 
     private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeWidth = 5f
-        color = Color.parseColor("#CCCCCC")
-        pathEffect = DashPathEffect(floatArrayOf(15f, 10f), 0f)
+        strokeWidth = 4f
+        color = Color.parseColor("#88FFFFFF") // Blanco semitransparente
+        pathEffect = DashPathEffect(floatArrayOf(15f, 15f), 0f)
     }
 
     private val baseLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 3f
-        color = Color.parseColor("#CCCCCC")
+        color = Color.parseColor("#88FFFFFF")
     }
 
     private val celestialPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -31,29 +31,27 @@ class SunPathView @JvmOverloads constructor(
     private var isDay = true
     private val arcRect = RectF()
 
-    // Recibe los tiempos absolutos en formato UNIX (Segundos)
     fun setTimes(sunriseUnix: Long, sunsetUnix: Long, currentUnix: Long) {
         isDay = currentUnix in sunriseUnix..sunsetUnix
 
-        // Matemáticas para progreso de Día o Noche
-        progress = if (isDay) {
+        if (isDay) {
             val totalDay = sunsetUnix - sunriseUnix
-            if (totalDay > 0) (currentUnix - sunriseUnix).toFloat() / totalDay.toFloat() else 0f
+            progress = if (totalDay > 0) (currentUnix - sunriseUnix).toFloat() / totalDay else 0f
         } else {
+            // Lógica simulada para la noche
+            val dayDuration = sunsetUnix - sunriseUnix
+            val nightDuration = 86400L - dayDuration
+
             if (currentUnix < sunriseUnix) {
-                // Es de madrugada (antes del amanecer)
-                val prevSunset = sunsetUnix - 86400 // Atardecer del día anterior
-                val totalNight = sunriseUnix - prevSunset
-                if (totalNight > 0) (currentUnix - prevSunset).toFloat() / totalNight.toFloat() else 0f
+                // Madrugada: la noche empezó ayer
+                val nightStart = sunsetUnix - 86400L
+                progress = if (nightDuration > 0) (currentUnix - nightStart).toFloat() / nightDuration else 0f
             } else {
-                // Es de noche (después del atardecer)
-                val nextSunrise = sunriseUnix + 86400 // Amanecer de mañana
-                val totalNight = nextSunrise - sunsetUnix
-                if (totalNight > 0) (currentUnix - sunsetUnix).toFloat() / totalNight.toFloat() else 0f
+                // Noche: la noche empezó hoy
+                progress = if (nightDuration > 0) (currentUnix - sunsetUnix).toFloat() / nightDuration else 0f
             }
         }
 
-        // Blindaje de seguridad
         if (progress < 0f) progress = 0f
         if (progress > 1f) progress = 1f
 
@@ -66,17 +64,14 @@ class SunPathView @JvmOverloads constructor(
         val width = width.toFloat()
         val height = height.toFloat()
         val centerX = width / 2f
-        val centerY = height - 30f // Espacio inferior para que no se corte
+        val centerY = height - 30f
 
-        // CORRECCIÓN CRÍTICA: El radio ahora respeta la altura disponible
         val radius = min(width / 2f, height) - 40f
         arcRect.set(centerX - radius, centerY - radius, centerX + radius, centerY + radius)
 
-        // Línea horizontal y arco
         canvas.drawLine(centerX - radius - 20f, centerY, centerX + radius + 20f, centerY, baseLinePaint)
         canvas.drawArc(arcRect, 180f, 180f, false, pathPaint)
 
-        // Trigonometría para colocar el cuerpo celeste
         val angleDeg = 180f + (180f * progress)
         val angleRad = Math.toRadians(angleDeg.toDouble())
 
@@ -84,11 +79,11 @@ class SunPathView @JvmOverloads constructor(
         val cy = centerY + radius * Math.sin(angleRad).toFloat()
 
         if (isDay) {
-            celestialPaint.color = Color.parseColor("#FFC107") // Sol (Amarillo)
+            celestialPaint.color = Color.parseColor("#FFD54F") // Sol
             canvas.drawCircle(cx, cy, 25f, celestialPaint)
         } else {
-            celestialPaint.color = Color.parseColor("#78909C") // Luna (Gris azulado)
-            canvas.drawCircle(cx, cy, 20f, celestialPaint)
+            celestialPaint.color = Color.parseColor("#E0E0E0") // Luna
+            canvas.drawCircle(cx, cy, 22f, celestialPaint)
         }
     }
 }
