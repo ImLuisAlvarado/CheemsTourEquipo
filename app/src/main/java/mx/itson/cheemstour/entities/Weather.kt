@@ -15,4 +15,7 @@ class Weather {
 
     @SerializedName("sys")
     var sun: WeatherSun = WeatherSun()
+
+    @SerializedName("timezone")
+    var timezone: Long = 0L
 }

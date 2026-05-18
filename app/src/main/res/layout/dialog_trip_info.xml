@@ -21,27 +21,20 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:textColor="#555555"
-        android:layout_marginBottom="20dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#EEEEEE"
         android:layout_marginBottom="16dp"/>
 
     <ImageView
         android:id="@+id/dialog_weather_icon"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:layout_marginBottom="8dp"/>
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/dialog_weather_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40sp"
+        android:textSize="36sp"
         android:textStyle="bold"
         android:layout_marginBottom="4dp"/>
 
@@ -51,7 +44,64 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="#444444"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#263238"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RECORRIDO DEL SOL / LUNA"
+            android:textSize="12sp"
+            android:textColor="#B0BEC5"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/dialog_local_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <mx.itson.cheemstour.utils.SunPathView
+            android:id="@+id/dialog_sun_path"
+            android:layout_width="match_parent"
+            android:layout_height="130dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/dialog_weather_sunrise"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:id="@+id/dialog_weather_sunset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/dialog_weather_temp_min"
@@ -79,22 +129,6 @@
 
     <TextView
         android:id="@+id/dialog_weather_humidity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#444444"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/dialog_weather_sunrise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#444444"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/dialog_weather_sunset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
