@@ -1,11 +1,7 @@
 package mx.itson.cheemstour
 
-import android.content.Context
 import android.location.Geocoder
-import android.os.Build
 import android.os.Bundle
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
@@ -26,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import mx.itson.cheemstour.entities.ApiResponse
 import mx.itson.cheemstour.entities.Trip
 import mx.itson.cheemstour.utils.RetrofitUtil
+import mx.itson.cheemstour.utils.VibratorUtil
 import retrofit2.Call
 import java.util.Locale
 
@@ -36,17 +33,6 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
     var longitudSeleccionada: Double = 0.0
     var ciudadSeleccionada: String = ""
 
-
-    //Con 'by lazy' valor se calcula y almacena solo la primera vez que se accede a la propiedad
-    val vibrator by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,37 +81,37 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
 
                                 if (respuestaApi != null && respuestaApi.success) {
                                     Toast.makeText(this@FromsTripMapsActivity, R.string.save_trip_toast, Toast.LENGTH_LONG).show()
-                                    vibrator.vibrate(500)
+                                    VibratorUtil.vibrate(this@FromsTripMapsActivity, 500)
                                     txfNameTrip.setText("") //limpiar el editext
 
                                 } else {
                                     Toast.makeText(this@FromsTripMapsActivity, R.string.error_save_db, Toast.LENGTH_SHORT).show()
-                                    vibrator.vibrate(1000)
+                                    VibratorUtil.vibrate(this@FromsTripMapsActivity, 1000)
                                 }
                             } else {
                                 // El servidor respondió codigo 500
                                 Log.e("API_ERROR", "Error HTTP: ${response.code()}")
                                 Toast.makeText(this@FromsTripMapsActivity, R.string.Failed_server, Toast.LENGTH_SHORT).show()
-                                vibrator.vibrate(1000)
+                                VibratorUtil.vibrate(this@FromsTripMapsActivity, 1000)
                             }
                         }
 
                         override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                             Log.e("API_FAILURE", "Fallo la comunicación con la API: ${t.message}", t)
                             Toast.makeText(this@FromsTripMapsActivity, R.string.err_connection, Toast.LENGTH_SHORT).show()
-                            vibrator.vibrate(1000)
+                            VibratorUtil.vibrate(this@FromsTripMapsActivity, 1000)
                         }
                     })
 
                 } else {
                     Toast.makeText(this, R.string.enter_name_select_point, Toast.LENGTH_LONG).show()
-                    vibrator.vibrate(100)
+                    VibratorUtil.vibrate(this, 500)
                 }
             }
         } catch (ex : Exception){
             Log.e("CLICK_ERROR", ex.message ?: "Error al procesar el clic del botón")
             Toast.makeText(this, R.string.err_click, Toast.LENGTH_SHORT).show()
-            vibrator.vibrate(1000)
+            VibratorUtil.vibrate(this, 1000)
 
         }
     }
@@ -160,14 +146,14 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
         } catch (ex : Exception){
             Log.e("Error loading map", ex.message ?: "Ocurrió un error desconocido")
             Toast.makeText(this, R.string.err_loading_map, Toast.LENGTH_SHORT).show()
-            vibrator.vibrate(800)
+            VibratorUtil.vibrate(this, 800)
         }
     }
 
     // cuando levanta el marcador
     override fun onMarkerDragStart(marker: Marker) {
         Log.d("MAPA", "Inicia el arrastre del marcador")
-        vibrator.vibrate(100)
+        VibratorUtil.vibrate(this, 100)
     }
 
     // Mientras se mueve
@@ -184,7 +170,7 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
             longitudSeleccionada = nuevaPosicion.longitude
 
             Log.d("MAPA", "Marcador soltado en Lat: $latitudSeleccionada, Lng: $longitudSeleccionada")
-            vibrator.vibrate(200)
+            VibratorUtil.vibrate(this, 200)
 
 
             var geocoder = Geocoder(this, Locale.getDefault())
@@ -205,7 +191,7 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
         } catch (ex : Exception){
             Log.e("GEOCODER_ERROR", ex.message ?: "Error al obtener la ciudad al soltar el marcador")
             Toast.makeText(this, R.string.not_city, Toast.LENGTH_SHORT).show()
-            vibrator.vibrate(1000)
+            VibratorUtil.vibrate(this, 1000)
         }
     }
 }

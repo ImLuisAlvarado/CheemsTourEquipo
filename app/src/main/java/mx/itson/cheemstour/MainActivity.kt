@@ -14,6 +14,7 @@ import mx.itson.cheemstour.utils.RetrofitUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import mx.itson.cheemstour.utils.VibratorUtil
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -39,10 +40,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnTripMap -> {
                 val intentMap = Intent(this, TripMapActivity::class.java)
                 startActivity(intentMap)
+                VibratorUtil.vibrate(this, 100)
             }
             R.id.btnViewFormsTrips ->{
                 val intentForms = Intent(this, FromsTripMapsActivity::class.java)
                 startActivity(intentForms)
+                VibratorUtil.vibrate(this, 100)
             }
         }
     }
