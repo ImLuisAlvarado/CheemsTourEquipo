@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import mx.itson.cheemstour.entities.ApiResponse
 import mx.itson.cheemstour.entities.Trip
 import mx.itson.cheemstour.entities.Weather
 import mx.itson.cheemstour.utils.RetrofitUtil
@@ -45,6 +46,54 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
     }
+    // siclo de vida para actializar el mapa despues de un cambio
+    override fun onResume() {
+        super.onResume()
+        // al actualizar un trip el mapa se tiene que actualizar
+        if (map != null) {
+            map?.clear()
+            markerTrip.clear()
+            getTrips()
+        }
+    }
+
+    private fun confirmDeleteTrip(trip: Trip) {
+        AlertDialog.Builder(this)
+            .setTitle("Eliminar Viaje")
+            .setMessage("¿Estás seguro de que deseas eliminar a ${trip.name}?")
+            .setPositiveButton("Sí, eliminar") { _, _ ->
+                val call = RetrofitUtil.getApiCheems().deleteTrip(trip.id!!)
+                call.enqueue(object : Callback<ApiResponse> {
+                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                        if (response.isSuccessful && response.body()?.success == true) {
+                            map?.clear()
+                            markerTrip.clear()
+                            getTrips()
+                        } else {
+                            Log.e("API_ERROR", "Fallo al eliminar")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                        Log.e("API_FAILURE", "Error de red: ${t.message}")
+                    }
+                })
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun openEditScreen(trip: Trip) {
+        val intent = android.content.Intent(this, FromsTripMapsActivity::class.java)
+
+        intent.putExtra("id", trip.id)
+        intent.putExtra("name", trip.name)
+        intent.putExtra("city", trip.city)
+        intent.putExtra("lat", trip.latitude)
+        intent.putExtra("lng", trip.longitude)
+
+        startActivity(intent)
+    }
 
     fun getTrips() {
         val call: Call<List<Trip>> = RetrofitUtil.getApiCheems().getTrips()
@@ -64,7 +113,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
                         icon(BitmapDescriptorFactory.fromResource(R.drawable.cheems))
                     )
 
-                    // guardamos el trip asociado a su marker
                     if(marker != null){
                         markerTrip[marker.id] = t
                     }
@@ -93,7 +141,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         call.enqueue(object : Callback<Weather> {
             override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
-                // 1. Validamos de forma segura que la respuesta exista (Evita NullPointerException)
                 if (response.isSuccessful && response.body() != null) {
                     val weather = response.body()!!
                     Log.d("Weather city", weather.city ?: "Ciudad desconocida")
@@ -111,13 +158,11 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     fun showTripInfo(trip: Trip, weather: Weather){
-        // Accesos seguros con valores por defecto por si el JSON falla
         val temperature = weather.temperature?.temperature?.toInt() ?: 0
         val temperatureMin = weather.temperature?.temperatureMin?.toInt() ?: 0
         val temperatureMax = weather.temperature?.temperatureMax?.toInt() ?: 0
         val description = weather.description?.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "--"
 
-        // Protegemos las fechas
         val sunRiseUnix = weather.sun?.sunrise ?: 0L
         val sunSetUnix = weather.sun?.sunset ?: 0L
         val dateSunrise = Date(sunRiseUnix * 1000L)
@@ -140,18 +185,11 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         view.findViewById<TextView>(R.id.dialog_weather_sunrise).text = "Salida del sol: ${dateFormat.format(dateSunrise)}"
         view.findViewById<TextView>(R.id.dialog_weather_sunset).text = "Puesta del sol: ${dateFormat.format(dateSunset)}"
 
-        // 1. Enlazamos el ImageView que creaste en el XML
         val imgWeatherIcon = view.findViewById<ImageView>(R.id.dialog_weather_icon)
-
-        // 2. Extraemos el código del ícono de la lista de OpenWeather
         val iconCode = weather.description?.firstOrNull()?.icon
 
-        // 3. Verificamos que el código no sea nulo antes de buscar la imagen
         if (iconCode != null) {
-            // Construimos la URL oficial. El "@4x" hace que se descargue en alta definición
             val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@4x.png"
-
-            // Usamos Glide para descargar e inyectar la imagen silenciosamente
             com.bumptech.glide.Glide.with(this)
                 .load(iconUrl)
                 .into(imgWeatherIcon)
@@ -168,11 +206,15 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         AlertDialog.Builder(this)
             .setView(view)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            // botones para realizar cambios
+            .setNeutralButton("Editar") { _, _ ->
+                openEditScreen(trip)
+            }
+            .setNegativeButton("Eliminar") { _, _ ->
+                confirmDeleteTrip(trip)
+            }
             .show()
     }
-
-
-
 
 
     override fun onMapReady(googleMap: GoogleMap) {
