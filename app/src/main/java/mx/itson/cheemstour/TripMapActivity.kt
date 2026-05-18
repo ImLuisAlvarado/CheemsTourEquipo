@@ -17,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import mx.itson.cheemstour.entities.ApiResponse
 import mx.itson.cheemstour.entities.Trip
 import mx.itson.cheemstour.entities.Weather
 import mx.itson.cheemstour.utils.RetrofitUtil
@@ -44,6 +45,55 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         var mapFragment = supportFragmentManager.findFragmentById(R.id.maps) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    // Ciclo de vida para actualizar el mapa después de un cambio
+    override fun onResume() {
+        super.onResume()
+        // Al actualizar un trip el mapa se tiene que actualizar
+        if (map != null) {
+            map?.clear()
+            markerTrip.clear()
+            getTrips()
+        }
+    }
+
+    private fun confirmDeleteTrip(trip: Trip) {
+        AlertDialog.Builder(this)
+            .setTitle("Eliminar Viaje")
+            .setMessage("¿Estás seguro de que deseas eliminar a ${trip.name}?")
+            .setPositiveButton("Sí, eliminar") { _, _ ->
+                val call = RetrofitUtil.getApiCheems().deleteTrip(trip.id!!)
+                call.enqueue(object : Callback<ApiResponse> {
+                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                        if (response.isSuccessful && response.body()?.success == true) {
+                            map?.clear()
+                            markerTrip.clear()
+                            getTrips()
+                        } else {
+                            Log.e("API_ERROR", "Fallo al eliminar")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                        Log.e("API_FAILURE", "Error de red: ${t.message}")
+                    }
+                })
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun openEditScreen(trip: Trip) {
+        val intent = android.content.Intent(this, FromsTripMapsActivity::class.java)
+
+        intent.putExtra("id", trip.id)
+        intent.putExtra("name", trip.name)
+        intent.putExtra("city", trip.city)
+        intent.putExtra("lat", trip.latitude)
+        intent.putExtra("lng", trip.longitude)
+
+        startActivity(intent)
     }
 
     fun getTrips() {
@@ -106,7 +156,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         val feel = weather.temperature?.feel?.toInt() ?: 0
         val humidity = weather.temperature?.humidity ?: 0
 
-        // Zona horaria local
+        // Zona horaria local y marcas de tiempo
         val sunRiseUnix = weather.sun?.sunrise ?: 0L
         val sunSetUnix = weather.sun?.sunset ?: 0L
         val tzShift = weather.timezone
@@ -118,7 +168,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         // Calculamos las fechas locales usando el desfase (tzShift)
         val dateSunrise = Date((sunRiseUnix + tzShift) * 1000L)
         val dateSunset = Date((sunSetUnix + tzShift) * 1000L)
-        val dateCurrentLocal = Date((currentUnix + tzShift) * 1000L) // NUEVO: Hora local actual
+        val dateCurrentLocal = Date((currentUnix + tzShift) * 1000L)
 
         val isDay = currentUnix in sunRiseUnix..sunSetUnix
 
@@ -133,7 +183,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         view.findViewById<TextView>(R.id.dialog_weather_desc).text = description
         view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: $humidity%"
 
-        // NUEVO: Asignamos la hora local formateada
+        // Asignamos la hora local formateada
         view.findViewById<TextView>(R.id.dialog_local_time).text = "Hora actual: ${dateFormat.format(dateCurrentLocal)}"
 
         val txtAmanecer = view.findViewById<TextView>(R.id.dialog_weather_sunrise)
@@ -169,6 +219,13 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         AlertDialog.Builder(this)
             .setView(view)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            // Botones integrados de Mario para realizar cambios en la API
+            .setNeutralButton("Editar") { _, _ ->
+                openEditScreen(trip)
+            }
+            .setNegativeButton("Eliminar") { _, _ ->
+                confirmDeleteTrip(trip)
+            }
             .show()
     }
 
