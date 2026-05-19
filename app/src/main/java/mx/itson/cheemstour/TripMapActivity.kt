@@ -60,9 +60,9 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun confirmDeleteTrip(trip: Trip) {
         AlertDialog.Builder(this)
-            .setTitle("Eliminar Viaje")
-            .setMessage("¿Estás seguro de que deseas eliminar a ${trip.name}?")
-            .setPositiveButton("Sí, eliminar") { _, _ ->
+            .setTitle(R.string.delete_trip)
+            .setMessage(getString(R.string.confirm_delete_msg,trip.name))
+            .setPositiveButton(getString(R.string.yes_delete)) { _, _ ->
                 val call = RetrofitUtil.getApiCheems().deleteTrip(trip.id!!)
                 call.enqueue(object : Callback<ApiResponse> {
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
@@ -80,7 +80,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 })
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -220,10 +220,10 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
             .setView(view)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             // Botones integrados de Mario para realizar cambios en la API
-            .setNeutralButton("Editar") { _, _ ->
+            .setNeutralButton(R.string.edit) { _, _ ->
                 openEditScreen(trip)
             }
-            .setNegativeButton("Eliminar") { _, _ ->
+            .setNegativeButton(R.string.delete) { _, _ ->
                 confirmDeleteTrip(trip)
             }
             .show()
