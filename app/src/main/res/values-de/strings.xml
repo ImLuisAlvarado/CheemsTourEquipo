@@ -27,4 +27,8 @@
     <string name="dialog_sunset">Sonnenuntergang</string>
     <string name="dialog_nxt_sunrise">Der nächste Sonnenaufgang</string>
     <string name="dialog_nxt_sunset">Nächster Sonnenuntergang</string>
+    <string name="dialog_btn_ok">OK</string>
+    <string name="dialog_btn_edit">Bearbeiten</string>
+    <string name="dialog_btn_delete">Löschen</string>
+    <string name="dialog_path_sun_moon">Umlaufbahnen von Sonne / Mond</string>
 </resources>

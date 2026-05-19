@@ -223,12 +223,12 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         AlertDialog.Builder(this)
             .setView(view)
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(getString(R.string.dialog_btn_ok)) { dialog, _ -> dialog.dismiss() }
             // Botones integrados de Mario para realizar cambios en la API
-            .setNeutralButton("Editar") { _, _ ->
+            .setNeutralButton(getString(R.string.dialog_btn_edit)) { _, _ ->
                 openEditScreen(trip)
             }
-            .setNegativeButton("Eliminar") { _, _ ->
+            .setNegativeButton(getString(R.string.dialog_btn_delete)) { _, _ ->
                 confirmDeleteTrip(trip)
             }
             .show()

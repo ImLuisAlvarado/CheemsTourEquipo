@@ -27,4 +27,8 @@
     <string name="dialog_sunset">Atardecer</string>
     <string name="dialog_nxt_sunrise">Próx. Amanecer</string>
     <string name="dialog_nxt_sunset">Próx. Atardecer</string>
+    <string name="dialog_btn_ok">OK</string>
+    <string name="dialog_btn_edit">Editar</string>
+    <string name="dialog_btn_delete">Eliminar</string>
+    <string name="dialog_path_sun_moon">Recorrido del Sol / Luna</string>
 </resources>

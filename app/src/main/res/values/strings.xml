@@ -26,4 +26,8 @@
     <string name="dialog_sunset">Sunset</string>
     <string name="dialog_nxt_sunrise">Next Sunrise</string>
     <string name="dialog_nxt_sunset">Next Sunset</string>
+    <string name="dialog_btn_ok">OK</string>
+    <string name="dialog_btn_edit">Edit</string>
+    <string name="dialog_btn_delete">Delete</string>
+    <string name="dialog_path_sun_moon">Path of the Sun / Moon</string>
 </resources>
