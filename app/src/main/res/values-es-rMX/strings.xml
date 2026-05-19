@@ -17,4 +17,14 @@
     <string name="enter_name_select_point">Por favor ingresa un nombre y selecciona un punto en el mapa</string>
     <string name="err_click">Ocurrió un error al procesar el click del botón</string>
     <string name="err_loading_map">Se ha producido un error al cargar el mapa</string>
+    <string name="dialog_city">Ciudad</string>
+    <string name="dialog_min_temp">Temperatura mínima</string>
+    <string name="dialog_max_temp">Temperatura máxima</string>
+    <string name="dialog_feelslike_temp">Sensación termica</string>
+    <string name="dialog_humidity">Humedad</string>
+    <string name="dialog_current_time">Hora actual</string>
+    <string name="dialog_sunrise">Amanecer</string>
+    <string name="dialog_sunset">Atardecer</string>
+    <string name="dialog_nxt_sunrise">Próx. Amanecer</string>
+    <string name="dialog_nxt_sunset">Próx. Atardecer</string>
 </resources>
