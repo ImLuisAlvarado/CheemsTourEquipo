@@ -16,4 +16,11 @@
     <string name="enter_name_select_point">Please enter a name and select a point on the map</string>
     <string name="err_click">An error occurred while processing the button click</string>
     <string name="err_loading_map">An error ocurred while loading the map</string>
+    <string name="delete_trip">Delete Trip</string>
+    <string name="confirm_delete_msg">Are you sure you want to delete a %1$s?</string>
+    <string name="yes_delete">Yes, delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="update_trip">Update trip</string>
 </resources>

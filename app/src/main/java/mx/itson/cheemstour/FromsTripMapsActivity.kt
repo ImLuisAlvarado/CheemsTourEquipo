@@ -61,7 +61,7 @@ class FromsTripMapsActivity : AppCompatActivity(), View.OnClickListener, OnMapRe
             selectedLatitude = intent.getDoubleExtra("lat", 0.0)
             selectedLongitude = intent.getDoubleExtra("lng", 0.0)
 
-            btnSaveTrip.text = "Actualizar Viaje"
+            btnSaveTrip.text = getString(R.string.update_trip)
         }
     }
 
