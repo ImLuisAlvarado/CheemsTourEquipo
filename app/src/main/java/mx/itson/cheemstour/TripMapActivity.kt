@@ -123,6 +123,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
     fun getWeather(trip: Trip) {
         val lang = when (Locale.getDefault().language) {
             "es" -> "es"
+            "de" -> "de"
             else -> "en"
         }
 
@@ -175,26 +176,26 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         val view = layoutInflater.inflate(R.layout.dialog_trip_info, null)
 
         view.findViewById<TextView>(R.id.dialog_trip_name).text = trip.name
-        view.findViewById<TextView>(R.id.dialog_trip_city).text = "Ciudad: ${trip.city}"
+        view.findViewById<TextView>(R.id.dialog_trip_city).text = "${getString(R.string.dialog_city)}:${trip.city}"
         view.findViewById<TextView>(R.id.dialog_weather_temp).text = "$temperature°C"
-        view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "Temperatura mínima: $temperatureMin°C"
-        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "Temperatura máxima: $temperatureMax°C"
-        view.findViewById<TextView>(R.id.dialog_weather_feel).text = "Sensación térmica: $feel°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "${getString(R.string.dialog_min_temp)}: $temperatureMin°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "${getString(R.string.dialog_max_temp)}: $temperatureMax°C"
+        view.findViewById<TextView>(R.id.dialog_weather_feel).text = "${getString(R.string.dialog_feelslike_temp)}: $feel°C"
         view.findViewById<TextView>(R.id.dialog_weather_desc).text = description
-        view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: $humidity%"
+        view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "${getString(R.string.dialog_humidity)}: $humidity%"
 
         // Asignamos la hora local formateada
-        view.findViewById<TextView>(R.id.dialog_local_time).text = "Hora actual: ${dateFormat.format(dateCurrentLocal)}"
+        view.findViewById<TextView>(R.id.dialog_local_time).text = "${getString(R.string.dialog_current_time)}: ${dateFormat.format(dateCurrentLocal)}"
 
         val txtAmanecer = view.findViewById<TextView>(R.id.dialog_weather_sunrise)
         val txtAtardecer = view.findViewById<TextView>(R.id.dialog_weather_sunset)
 
         if (isDay) {
-            txtAmanecer.text = "Amanecer\n${dateFormat.format(dateSunrise)}"
-            txtAtardecer.text = "Atardecer\n${dateFormat.format(dateSunset)}"
+            txtAmanecer.text = "${getString(R.string.dialog_sunrise)}\n${dateFormat.format(dateSunrise)}"
+            txtAtardecer.text = "${getString(R.string.dialog_sunset)}\n${dateFormat.format(dateSunset)}"
         } else {
-            txtAmanecer.text = "Atardecer\n${dateFormat.format(dateSunset)}"
-            txtAtardecer.text = "Próx. Amanecer\n${dateFormat.format(dateSunrise)}"
+            txtAmanecer.text = "${getString(R.string.dialog_nxt_sunset)}\n${dateFormat.format(dateSunset)}"
+            txtAtardecer.text = "${getString(R.string.dialog_nxt_sunrise)}\n${dateFormat.format(dateSunrise)}"
         }
 
         val sunPathView = view.findViewById<SunPathView>(R.id.dialog_sun_path)

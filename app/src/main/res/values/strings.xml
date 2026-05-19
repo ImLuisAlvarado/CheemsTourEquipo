@@ -24,15 +24,16 @@
     <string name="edit">Edit</string>
     <string name="update_trip">Update trip</string>
 
-    <!-- Dialog Weather Strings -->
+
     <string name="dialog_city">City</string>
-    <string name="dialog_min_temp">Min Temp</string>
-    <string name="dialog_max_temp">Max Temp</string>
-    <string name="dialog_feelslike_temp">Feels like</string>
+    <string name="dialog_min_temp">Lowest Temperature</string>
+    <string name="dialog_max_temp">Highest Temperature</string>
+    <string name="dialog_feelslike_temp">Feels-like Temperature</string>
     <string name="dialog_humidity">Humidity</string>
-    <string name="dialog_current_time">Current local time</string>
+    <string name="dialog_current_time">Current Time:</string>
     <string name="dialog_sunrise">Sunrise</string>
     <string name="dialog_sunset">Sunset</string>
     <string name="dialog_nxt_sunrise">Next Sunrise</string>
     <string name="dialog_nxt_sunset">Next Sunset</string>
+    <string name="dialog_path_sun_moon">Path of the Sun / Moon</string>
 </resources>

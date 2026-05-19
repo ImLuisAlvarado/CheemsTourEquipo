@@ -24,4 +24,17 @@
     <string name="delete">Beseitigen</string>
     <string name="edit">Bearbeiten</string>
     <string name="update_trip">Reise-Update</string>
+
+
+    <string name="dialog_city">Stadt</string>
+    <string name="dialog_min_temp">Tiefsttemperatur</string>
+    <string name="dialog_max_temp">Höchsttemperatur</string>
+    <string name="dialog_feelslike_temp">Gefühlte Temperatur</string>
+    <string name="dialog_humidity">Luftfeuchtigkeit</string>
+    <string name="dialog_current_time">Aktuelle Uhrzeit</string>
+    <string name="dialog_sunrise">Sonnenaufgang</string>
+    <string name="dialog_sunset">Sonnenuntergang</string>
+    <string name="dialog_nxt_sunrise">Der nächste Sonnenaufgang</string>
+    <string name="dialog_nxt_sunset">Nächster Sonnenuntergang</string>
+    <string name="dialog_path_sun_moon">Umlaufbahnen von Sonne / Mond</string>
 </resources>

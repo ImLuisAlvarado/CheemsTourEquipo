@@ -20,8 +20,20 @@
     <string name="delete_trip">Borrar viaje</string>
     <string name="confirm_delete_msg">Estás seguro de que deseas eliminar a %1$s?</string>
     <string name="yes_delete">Si, cancelar</string>
-    <string name="cancel">cancelar</string>
+    <string name="cancel">Cancelar</string>
     <string name="delete">Eliminar</string>
     <string name="edit">Editar</string>
     <string name="update_trip">Actualizar viaje</string>
+
+    <string name="dialog_city">Ciudad</string>
+    <string name="dialog_min_temp">Temperatura mínima</string>
+    <string name="dialog_max_temp">Temperatura máxima</string>
+    <string name="dialog_feelslike_temp">Sensación termica</string>
+    <string name="dialog_humidity">Humedad</string>
+    <string name="dialog_current_time">Hora actual</string>
+    <string name="dialog_sunrise">Amanecer</string>
+    <string name="dialog_sunset">Atardecer</string>
+    <string name="dialog_nxt_sunrise">Próx. Amanecer</string>
+    <string name="dialog_nxt_sunset">Próx. Atardecer</string>
+    <string name="dialog_path_sun_moon">Recorrido del Sol / Luna</string>
 </resources>
