@@ -60,9 +60,9 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun confirmDeleteTrip(trip: Trip) {
         AlertDialog.Builder(this)
-            .setTitle("Eliminar Viaje")
-            .setMessage("¿Estás seguro de que deseas eliminar a ${trip.name}?")
-            .setPositiveButton("Sí, eliminar") { _, _ ->
+            .setTitle(R.string.delete_trip)
+            .setMessage(getString(R.string.confirm_delete_msg,trip.name))
+            .setPositiveButton(getString(R.string.yes_delete)) { _, _ ->
                 val call = RetrofitUtil.getApiCheems().deleteTrip(trip.id!!)
                 call.enqueue(object : Callback<ApiResponse> {
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
@@ -80,7 +80,7 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 })
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -100,22 +100,18 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         val call: Call<List<Trip>> = RetrofitUtil.getApiCheems().getTrips()
         call.enqueue(object : Callback<List<Trip>> {
             override fun onResponse(call: Call<List<Trip>>, response: Response<List<Trip>>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val trips: List<Trip> = response.body()!!
-                    trips.forEach { t ->
-                        val latLng = LatLng(t.latitude, t.longitude)
-                        val marker = map?.addMarker(
-                            MarkerOptions()
-                                .position(latLng)
-                                .title(t.name)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.cheems))
-                        )
-                        if (marker != null) {
-                            markerTrip[marker.id] = t
-                        }
+                val trips: List<Trip> = response.body()!!
+                trips.forEach { t->
+                    val latLng = LatLng(t.latitude, t.longitude)
+                    val marker = map?.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title(t.name)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.cheems))
+                    )
+                    if(marker != null){
+                        markerTrip[marker.id] = t
                     }
-                } else {
-                    Log.e("API_ERROR", "Respuesta no exitosa o lista vacía")
                 }
             }
             override fun onFailure(call: Call<List<Trip>>, t: Throwable) {
@@ -127,7 +123,6 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
     fun getWeather(trip: Trip) {
         val lang = when (Locale.getDefault().language) {
             "es" -> "es"
-            "de" -> "de"
             else -> "en"
         }
 
@@ -180,26 +175,26 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
         val view = layoutInflater.inflate(R.layout.dialog_trip_info, null)
 
         view.findViewById<TextView>(R.id.dialog_trip_name).text = trip.name
-        view.findViewById<TextView>(R.id.dialog_trip_city).text = "${getString(R.string.dialog_city)}: ${trip.city}"
+        view.findViewById<TextView>(R.id.dialog_trip_city).text = "Ciudad: ${trip.city}"
         view.findViewById<TextView>(R.id.dialog_weather_temp).text = "$temperature°C"
-        view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "${getString(R.string.dialog_min_temp)}: $temperatureMin°C"
-        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "${getString(R.string.dialog_max_temp)}: $temperatureMax°C"
-        view.findViewById<TextView>(R.id.dialog_weather_feel).text = "${getString(R.string.dialog_feelslike_temp)}: $feel°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_min).text = "Temperatura mínima: $temperatureMin°C"
+        view.findViewById<TextView>(R.id.dialog_weather_temp_max).text = "Temperatura máxima: $temperatureMax°C"
+        view.findViewById<TextView>(R.id.dialog_weather_feel).text = "Sensación térmica: $feel°C"
         view.findViewById<TextView>(R.id.dialog_weather_desc).text = description
-        view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "${getString(R.string.dialog_humidity)}: $humidity%"
+        view.findViewById<TextView>(R.id.dialog_weather_humidity).text = "Humedad: $humidity%"
 
         // Asignamos la hora local formateada
-        view.findViewById<TextView>(R.id.dialog_local_time).text = "${getString(R.string.dialog_current_time)}: ${dateFormat.format(dateCurrentLocal)}"
+        view.findViewById<TextView>(R.id.dialog_local_time).text = "Hora actual: ${dateFormat.format(dateCurrentLocal)}"
 
         val txtAmanecer = view.findViewById<TextView>(R.id.dialog_weather_sunrise)
         val txtAtardecer = view.findViewById<TextView>(R.id.dialog_weather_sunset)
 
         if (isDay) {
-            txtAmanecer.text = "${getString(R.string.dialog_sunrise)}\n${dateFormat.format(dateSunrise)}"
-            txtAtardecer.text = "${getString(R.string.dialog_sunset)}\n${dateFormat.format(dateSunset)}"
+            txtAmanecer.text = "Amanecer\n${dateFormat.format(dateSunrise)}"
+            txtAtardecer.text = "Atardecer\n${dateFormat.format(dateSunset)}"
         } else {
-            txtAmanecer.text = "${getString(R.string.dialog_nxt_sunset)}\n${dateFormat.format(dateSunset)}"
-            txtAtardecer.text = "${getString(R.string.dialog_nxt_sunrise)}\n${dateFormat.format(dateSunrise)}"
+            txtAmanecer.text = "Atardecer\n${dateFormat.format(dateSunset)}"
+            txtAtardecer.text = "Próx. Amanecer\n${dateFormat.format(dateSunrise)}"
         }
 
         val sunPathView = view.findViewById<SunPathView>(R.id.dialog_sun_path)
@@ -223,12 +218,12 @@ class TripMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         AlertDialog.Builder(this)
             .setView(view)
-            .setPositiveButton(getString(R.string.dialog_btn_ok)) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             // Botones integrados de Mario para realizar cambios en la API
-            .setNeutralButton(getString(R.string.dialog_btn_edit)) { _, _ ->
+            .setNeutralButton(R.string.edit) { _, _ ->
                 openEditScreen(trip)
             }
-            .setNegativeButton(getString(R.string.dialog_btn_delete)) { _, _ ->
+            .setNegativeButton(R.string.delete) { _, _ ->
                 confirmDeleteTrip(trip)
             }
             .show()

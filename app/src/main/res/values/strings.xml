@@ -16,18 +16,23 @@
     <string name="enter_name_select_point">Please enter a name and select a point on the map</string>
     <string name="err_click">An error occurred while processing the button click</string>
     <string name="err_loading_map">An error ocurred while loading the map</string>
+    <string name="delete_trip">Delete Trip</string>
+    <string name="confirm_delete_msg">Are you sure you want to delete a %1$s?</string>
+    <string name="yes_delete">Yes, delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="update_trip">Update trip</string>
+
+    <!-- Dialog Weather Strings -->
     <string name="dialog_city">City</string>
-    <string name="dialog_min_temp">Lowest Temperature</string>
-    <string name="dialog_max_temp">Highest Temperature</string>
-    <string name="dialog_feelslike_temp">Feels-like Temperature</string>
+    <string name="dialog_min_temp">Min Temp</string>
+    <string name="dialog_max_temp">Max Temp</string>
+    <string name="dialog_feelslike_temp">Feels like</string>
     <string name="dialog_humidity">Humidity</string>
-    <string name="dialog_current_time">Current Time:</string>
+    <string name="dialog_current_time">Current local time</string>
     <string name="dialog_sunrise">Sunrise</string>
     <string name="dialog_sunset">Sunset</string>
     <string name="dialog_nxt_sunrise">Next Sunrise</string>
     <string name="dialog_nxt_sunset">Next Sunset</string>
-    <string name="dialog_btn_ok">OK</string>
-    <string name="dialog_btn_edit">Edit</string>
-    <string name="dialog_btn_delete">Delete</string>
-    <string name="dialog_path_sun_moon">Path of the Sun / Moon</string>
 </resources>

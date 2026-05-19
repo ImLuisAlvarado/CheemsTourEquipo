@@ -17,18 +17,11 @@
     <string name="enter_name_select_point">Bitte gib einen Namen ein und wähle einen Punkt auf der Karte aus</string>
     <string name="err_click">Bei der Verarbeitung des Klickereignisses ist ein Fehler aufgetreten</string>
     <string name="err_loading_map">" Beim Laden der Karte ist ein Fehler aufgetreten"</string>
-    <string name="dialog_city">Stadt</string>
-    <string name="dialog_min_temp">Tiefsttemperatur</string>
-    <string name="dialog_max_temp">Höchsttemperatur</string>
-    <string name="dialog_feelslike_temp">Gefühlte Temperatur</string>
-    <string name="dialog_humidity">Luftfeuchtigkeit</string>
-    <string name="dialog_current_time">Aktuelle Uhrzeit</string>
-    <string name="dialog_sunrise">Sonnenaufgang</string>
-    <string name="dialog_sunset">Sonnenuntergang</string>
-    <string name="dialog_nxt_sunrise">Der nächste Sonnenaufgang</string>
-    <string name="dialog_nxt_sunset">Nächster Sonnenuntergang</string>
-    <string name="dialog_btn_ok">OK</string>
-    <string name="dialog_btn_edit">Bearbeiten</string>
-    <string name="dialog_btn_delete">Löschen</string>
-    <string name="dialog_path_sun_moon">Umlaufbahnen von Sonne / Mond</string>
+    <string name="delete_trip">Reise löschen</string>
+    <string name="confirm_delete_msg">Sind Sie sicher, dass Sie löschen möchten %1$s?</string>
+    <string name="yes_delete">Ja, stornieren.</string>
+    <string name="cancel">Stornieren</string>
+    <string name="delete">Beseitigen</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="update_trip">Reise-Update</string>
 </resources>
